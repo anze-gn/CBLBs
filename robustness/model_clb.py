@@ -1,3 +1,5 @@
+import os
+
 from scipy.integrate import ode
 import matplotlib.pyplot as plt
 
@@ -292,7 +294,7 @@ class model_clb:
 
             #plt.suptitle("$out = \\overline{S}_1 \\overline{S}_0 I_0 \\vee \\overline{S}_1 S_0 I_1 \\vee S_1 \\overline{S}_0 I_2 \\vee S_1 S_0 I_3$")
             plt.gcf().set_size_inches(15,10)
-            plt.savefig("figs\\CLBB_ode.pdf", bbox_inches = 'tight')
+            plt.savefig(os.path.join("figs", "CBLB_ode.pdf"), bbox_inches='tight')
             plt.show()  
 
 

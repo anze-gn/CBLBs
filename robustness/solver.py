@@ -451,7 +451,7 @@ class Solver:
 if __name__ == '__main__':
 
     
-    filename = "results_optimization\\" 
+    filename = os.path.join("results_optimization", "")
     
     #model = BioProc(np.array(["protein_production", "protein_production", "protein_production", "protein_production", "protein_degradation", "protein_degradation", "Kd","hill", "protein_production", "protein_degradation", "Kd", "hill"]), model_mode=three_bit_processor_ext, parameter_values=param_values, avg_dev=30)                                         
     model = model_clb()

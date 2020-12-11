@@ -107,7 +107,7 @@ def plotParamsdf(df=None, number_points = 0):
     fig=plt.gcf()
 
     fig.set_size_inches([15,12])
-    #plt.savefig('results_robustness\\params_distrib_sns.pdf', bbox_inches = 'tight')
+    #plt.savefig(os.path.join('results_robustness', 'params_distrib_sns.pdf'), bbox_inches = 'tight')
     plt.show()
 
 
@@ -157,7 +157,7 @@ def plot_frac(df, box=False):
     fig = plt.gcf()
     fig.set_size_inches([12,4])
 
-    plt.savefig('results_robustness_population\\population_distrib_sns.pdf', bbox_inches = 'tight')        
+    plt.savefig(os.path.join('results_robustness_population', 'population_distrib_sns.pdf'), bbox_inches = 'tight')
     plt.show()
 
 def test_random_point():
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     local_solutions = True
 
     
-    base_paths_opt = ["results_optimization_population\\cblb_pop_frac"]
+    base_paths_opt = [os.path.join("results_optimization_population", "cblb_pop_frac")]
 
 
     #
@@ -221,8 +221,8 @@ if __name__ == "__main__":
 
 
  
-    df = getParamDistrib(file_name="results_robustness_population\\params_population.csv")
-    #df = pd.read_csv("results_robustness_population\\params_population.csv")
+    df = getParamDistrib(file_name=os.path.join("results_robustness_population", "params_population.csv"))
+    #df = pd.read_csv(os.path.join("results_robustness_population", "params_population.csv"))
 
     #plotParamsdf(df)
     #plot_populations(df)
