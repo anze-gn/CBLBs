@@ -24,13 +24,12 @@ The main files that can be used to reproduce the results reported in the paper [
 ## Requirements
 You should install the following libraries before running the code 
 * `DEAP`
-* `multiprocessing`
 * `SciPy`
 * `NumPy`
 * `seaborn`
 * `matplotlib`
 * `pandas`
-* `pickle`
+* `sklearn`
 
 ## How to cite this work
 Please cite this work as
