@@ -92,9 +92,9 @@ def plotParamsdf(df=None, number_points = 0, box=False):
 
     fig.set_size_inches([15,12])
     if box:
-        plt.savefig(os.path.join('results_robustness", "params_distrib_sns_box.pdf'), bbox_inches = 'tight')
+        plt.savefig(os.path.join('results_robustness', 'params_distrib_sns_box.pdf'), bbox_inches = 'tight')
     else:
-        plt.savefig(os.path.join('results_robustness", "params_distrib_sns.pdf'), bbox_inches = 'tight')
+        plt.savefig(os.path.join('results_robustness', 'params_distrib_sns.pdf'), bbox_inches = 'tight')
     plt.show()
 
 def test_random_point():
