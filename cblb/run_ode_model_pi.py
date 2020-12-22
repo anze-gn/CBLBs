@@ -22,7 +22,7 @@ N = t_end
 rho_x = 0
 rho_y = 0
 
-Y0 = np.zeros(51)
+Y0 = np.zeros(49)
 
 # number of cells: toggle switches
 N_S0 = np.array([1,1])
@@ -33,7 +33,7 @@ Y0[10:12] = N_S1
 
 # number of cells: mux
 #Y0[22-4+24:38-4+24] = 1 # number of cells ???
-Y0[30:46] = 1 # number of cells
+Y0[32:48] = 1 # number of cells
 
 
 """
@@ -65,7 +65,7 @@ for iteration, state in enumerate(states):
     t1 = t_end
     dt = t_end/N
     T = np.arange(0,t1+dt,dt)
-    Y = np.zeros([1+N,51])
+    Y = np.zeros([1+N,49])
     Y[0,:] = Y0
 
 
@@ -160,5 +160,3 @@ plt.gcf().set_size_inches(15,15)
 plt.savefig(os.path.join("figs", "PI_ode.pdf"), bbox_inches = 'tight')
 
 plt.show()  
-
-
