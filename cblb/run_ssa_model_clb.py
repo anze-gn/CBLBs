@@ -93,7 +93,8 @@ Y0[22:24] = N_I3
 Y0[42:58] = 1 # number of cells
 
 
-# reaction space volume for a single cell
+# reaction space volume for the whole cell population
+# N_cells should be set to 1
 Omega = 10
 
 t_end = 500
@@ -137,8 +138,8 @@ for iteration, state in enumerate(states):
 
     if iteration:
         Y0 = Y_full[-1,:]        
-    else:
-        Y0 *= Omega
+    #else:
+    #    Y0 *= N_cells
 
     #print(Y0)
 

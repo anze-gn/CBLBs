@@ -22,6 +22,7 @@ def not_cell(state, params):
 
     return dL_X_dt, dx_dt
 
+"""
 def not_cell_stochastic(state, params, Omega):
     L_X, x, y, N_X, N_Y = state
     delta_L, gamma_L_X, n_y, theta_L_X, eta_x, omega_x, m_x, delta_x, rho_x = params
@@ -54,7 +55,7 @@ def not_cell_stochastic(state, params, Omega):
     p[4] = rho_x * x
 
     return p
-
+"""
 
 def yes_cell(state, params):
     x, y, N_X, N_Y = state
@@ -67,7 +68,7 @@ def yes_cell(state, params):
     dx_dt = N_X * gamma_x * (y ** n_y)/(1 + (theta_x*y)**n_y ) - N_Y * (delta_x * x) - rho_x * x
     
     return dx_dt
-
+"""
 def yes_cell_stochastic(state, params, Omega):
     x, y, N_X, N_Y = state
     gamma_x, n_y, theta_x, delta_x, rho_x = params
@@ -92,7 +93,7 @@ def yes_cell_stochastic(state, params, Omega):
     p[2] = rho_x * x
     
     return p
-
+"""
 
 def population(state, params):
     N = state
@@ -101,7 +102,7 @@ def population(state, params):
     dN = r * N * (1 - N)    
 
     return dN
-
+"""
 def population_stochastic(state, params, Omega):
     N = state
     r = params
@@ -112,7 +113,7 @@ def population_stochastic(state, params, Omega):
     p[1] = r * Omega * N**2
 
     return p
-
+"""
 
 def toggle_model(state, T, params):
     L_A, L_B, a, b, N_A, N_B = state
@@ -132,7 +133,7 @@ def toggle_model(state, T, params):
     dN_B_dt = population(N_B, r_B)
         
     return np.array([dL_A_dt, dL_B_dt, da_dt, db_dt, dN_A_dt, dN_B_dt])
-
+"""
 def toggle_model_stochastic(state, params, Omega):
     L_A, L_B, a, b, N_A, N_B = state
 
@@ -213,7 +214,7 @@ def toggle_generate_stoichiometry():
         N[idx_b, r] = -1
 
         return N
-
+"""
 
 # L_A ... intermediate
 # a ... out
