@@ -46,7 +46,7 @@ for iteration, state in enumerate(states):
     I = state[1]
     S0, S1 = S
 
-    if iteration > 0 and states[iteration-1][1] == I:
+    if iteration > 0 and states[iteration-1][0] == I:
         rho_S0_a, rho_S0_b, rho_S1_a, rho_S1_b = 0, 0, 0, 0
     else:
         rho_S0_a, rho_S0_b, rho_S1_a, rho_S1_b = (1-S0) * 5, S0*5, (1-S1)*5, S1*5
