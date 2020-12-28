@@ -1203,6 +1203,7 @@ def PI_model(state, T, params):  # programmable interconnections model
     ########
     # model
     dstate_mux = MUX_4_1_model(state_mux, T, params_mux)
+    dstate_mux = np.delete(dstate_mux, [4,5]) # ignore dS0, dS1
 
     """
     return
