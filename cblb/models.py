@@ -1343,8 +1343,8 @@ def PI_mux2_model(state, T, params):  # programmable interconnections model
     #########
     # state
     S0 = S0_a
-    I0, I1 = state[12:14]
-    state_mux = np.append([I0, I1, S0], state[16:], axis=0)
+    I0, I1 = state[6:8]
+    state_mux = np.append([I0, I1, S0], state[8:], axis=0)
 
     ########
     # model
