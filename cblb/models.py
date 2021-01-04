@@ -410,6 +410,95 @@ def MUX_4_1_model(state, T, params):
 
     return dstate
 
+
+def MUX_2_1_model(state, T, params):
+    delta_L, gamma_L_X, n_y, theta_L_X, eta_x, omega_x, m_x, delta_x, rho_x, gamma_x, theta_x, r_X = params
+    params_yes = gamma_x, n_y, theta_x, delta_x, rho_x
+    params_not = delta_L, gamma_L_X, n_y, theta_L_X, eta_x, omega_x, m_x, delta_x, rho_x
+
+    #I0, I1, I2, I3, S0, S1 = state[:6]
+    I0, I1, S0 = state[:3]
+
+    # I0_out, I1_out, I2_out, I3_out = state[6:10]
+    I0_out, I1_out = state[3:5]
+
+    # L_I0_I0, L_I1_S0, L_I1_I1, L_I2_S1, L_I2_I2, L_I3_S0, L_I3_S1, L_I3_I3, L_I0, L_I1, L_I2, L_I3 = state[10:22]
+    L_I0_I0, L_I1_S0, L_I1_I1, L_I0, L_I1 = state[5:10]
+
+    # N_I0_S0, N_I0_S1, N_I0_I0, N_I1_S0, N_I1_S1, N_I1_I1, N_I2_S0, N_I2_S1, N_I2_I2, N_I3_S0, N_I3_S1, N_I3_I3, N_I0, N_I1, N_I2, N_I3 = state[22:38]
+    N_I0_S0, N_I0_I0, N_I1_S0, N_I1_S1, N_I1_I1, N_I0, N_I1 = state[10:17]
+    out = state[18]
+
+    """
+     I0
+    """
+    dI0_out = 0
+
+    # yes S0: I0_S0
+    state_yes_I0_S0 = I0_out, S0, N_I0_S0
+    dI0_out += yes_cell_wrapper(state_yes_I0_S0, params_yes)
+    dN_I0_S0 = population(N_I0_S0, r_X)
+
+    # not I0: I0_I0
+    state_not_I0_I0 = L_I0_I0, I0_out, I0, N_I0_I0
+    dL_I0_I0, dd = not_cell_wrapper(state_not_I0_I0, params_not)
+    dI0_out += dd
+    dN_I0_I0 = population(N_I0_I0, r_X)
+
+    """
+     I1
+    """
+    dI1_out = 0
+
+    # not S0: I1_S0
+    state_not_I1_S0 = L_I1_S0, I1_out, S0, N_I1_S0
+    dL_I1_S0, dd = not_cell_wrapper(state_not_I1_S0, params_not)
+    dI1_out += dd
+    dN_I1_S0 = population(N_I1_S0, r_X)
+
+    # not I1: I1_I1
+    state_not_I1_I1 = L_I1_I1, I1_out, I1, N_I1_I1
+    dL_I1_I1, dd = not_cell_wrapper(state_not_I1_I1, params_not)
+    dI1_out += dd
+    dN_I1_I1 = population(N_I1_I1, r_X)
+
+    """
+    out
+    """
+    dout = 0
+
+    # not I0: I0
+    state_not_I0 = L_I0, out, I0_out, N_I0
+    dL_I0, dd = not_cell_wrapper(state_not_I0, params_not)
+    dout += dd
+    dN_I0 = population(N_I0, r_X)
+
+    # not I1: I1
+    state_not_I1 = L_I1, out, I1_out, N_I1
+    dL_I1, dd = not_cell_wrapper(state_not_I1, params_not)
+    dout += dd
+    dN_I1 = population(N_I1, r_X)
+
+    dI0, dI1, dS0 = 0, 0, 0
+
+    # dstate = np.array([dI0, dI1, dI2, dI3, dS0, dS1,
+    #                    dI0_out, dI1_out, dI2_out, dI3_out,
+    #                    dL_I0_I0, dL_I1_S0, dL_I1_I1, dL_I2_S1, dL_I2_I2, dL_I3_S0, dL_I3_S1, dL_I3_I3, dL_I0, dL_I1,
+    #                    dL_I2, dL_I3,
+    #                    dN_I0_S0, dN_I0_S1, dN_I0_I0, dN_I1_S0, dN_I1_S1, dN_I1_I1, dN_I2_S0, dN_I2_S1, dN_I2_I2,
+    #                    dN_I3_S0, dN_I3_S1, dN_I3_I3, dN_I0, dN_I1, dN_I2, dN_I3,
+    #                    dout])
+
+    dstate = np.array([dI0, dI1, dS0,
+                       dI0_out, dI1_out,
+                       dL_I0_I0, dL_I1_S0, dL_I1_I1, dL_I0, dL_I1,
+                       #
+                       dN_I0_S0, dN_I0_I0, dN_I1_S0, dN_I1_I1,
+                       dN_I0, dN_I1,
+                       dout])
+
+    return dstate
+
 def MUX_4_1_generate_stoichiometry():
 
     """
@@ -1211,7 +1300,62 @@ def PI_model(state, T, params):  # programmable interconnections model
     dstate = np.append(dstate_toggles, dstate_mux, axis=0)
     return dstate
 
+def PI_mux2_model(state, T, params):  # programmable interconnections model
+    delta_L, gamma_L_X, n_y, theta_L_X, eta_x, omega_x, m_x, delta_x, delta_y, rho_x, rho_y, gamma_x, theta_x, r_X, r_Y, rho_S0_a, rho_S0_b = params
 
+    """
+    latches
+    """
+    #########
+    # params
+
+    # set params for symmetric toggle switch topology
+    gamma_L_Y, theta_L_Y = gamma_L_X, theta_L_X
+    n_x, m_y = n_y, m_x
+    eta_y, omega_y = eta_x, omega_x
+
+    params_toggle = [delta_L, gamma_L_X, gamma_L_Y, n_x, n_y, theta_L_X, theta_L_Y, eta_x, eta_y, omega_x, omega_y, m_x, m_y, delta_x, delta_y, rho_x, rho_y, r_X, r_Y]
+
+    # degradation rates for induction of switches are specific for each toggle switch
+    params_toggle_S0 = params_toggle.copy()
+    params_toggle_S0[-4:-2] = rho_S0_a, rho_S0_b
+
+    #########
+    # states
+
+    # latch S0
+    S0_L_A, S0_L_B, S0_a, S0_b, S0_N_a, S0_N_b = state[:6]
+    state_toggle_SO = S0_L_A, S0_L_B, S0_a, S0_b, S0_N_a, S0_N_b
+
+    #########
+    # models
+    dstate_toggle_SO = toggle_model(state_toggle_SO, T, params_toggle_S0)
+
+    dstate_toggles = np.append(dstate_toggle_SO, axis=0)
+
+    """
+    mux
+    """
+    #########
+    # params
+    params_mux = delta_L, gamma_L_X, n_y, theta_L_X, eta_x, omega_x, m_x, delta_x, rho_x, gamma_x, theta_x, r_X
+
+    #########
+    # state
+    S0 = S0_a
+    I0, I1 = state[12:14]
+    state_mux = np.append([I0, I1, S0], state[16:], axis=0)
+
+    ########
+    # model
+    dstate_mux = MUX_2_1_model(state_mux, T, params_mux)
+    dstate_mux = np.delete(dstate_mux, [4,5]) # ignore dS0, dS1
+
+    """
+    return
+    """
+    dstate = np.append(dstate_toggles, dstate_mux, axis=0)
+    return dstate
 
 """
 wrappers for scipy.integrate.ode
@@ -1235,3 +1379,6 @@ def CLB_model_ODE(T, state, params):
 
 def PI_model_ODE(T, state, params):
     return PI_model(state, T, params)
+
+def PI_mux2_model_ODE(T, state, params):
+    return PI_mux2_model(state, T, params)
