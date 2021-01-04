@@ -1235,6 +1235,16 @@ def CLB_model_stochastic(state, params, Omega):
     return p_toggle_IO + p_toggle_I1 + p_toggle_I2 + p_toggle_I3 + p_mux
 
 
+def PI_generate_stoichiometry():
+    N_toggle_SO = toggle_generate_stoichiometry()
+    N_toggle_S1 = toggle_generate_stoichiometry()
+
+    N_mux = MUX_4_1_generate_stoichiometry() # TODO
+    # skip first 2 rows (S0, S1)
+    N_mux = N_mux[2:,:]
+
+    return merge_N(merge_N(N_toggle_SO, N_toggle_S1), N_mux)
+
 def PI_model(state, T, params):  # programmable interconnections model
     delta_L, gamma_L_X, n_y, theta_L_X, eta_x, omega_x, m_x, delta_x, delta_y, rho_x, rho_y, gamma_x, theta_x, r_X, r_Y, rho_S0_a, rho_S0_b, rho_S1_a, rho_S1_b = params
 
@@ -1300,6 +1310,7 @@ def PI_model(state, T, params):  # programmable interconnections model
     dstate = np.append(dstate_toggles, dstate_mux, axis=0)
     return dstate
 
+
 def PI_mux2_model(state, T, params):  # programmable interconnections model
     delta_L, gamma_L_X, n_y, theta_L_X, eta_x, omega_x, m_x, delta_x, delta_y, rho_x, rho_y, gamma_x, theta_x, r_X, r_Y, rho_S0_a, rho_S0_b = params
 
@@ -1356,6 +1367,70 @@ def PI_mux2_model(state, T, params):  # programmable interconnections model
     """
     dstate = np.append(dstate_toggles, dstate_mux, axis=0)
     return dstate
+
+
+def PI_model_stochastic(state, params, Omega):
+    delta_L, gamma_L_X, n_y, theta_L_X, eta_x, omega_x, m_x, delta_x, delta_y, rho_x, rho_y, gamma_x, theta_x, r_X, r_Y, rho_S0_a, rho_S0_b, rho_S1_a, rho_S1_b = params
+
+    """
+    latches
+    """
+    #########
+    # params
+
+    # set params for symmetric toggle switch topology
+    gamma_L_Y, theta_L_Y = gamma_L_X, theta_L_X
+    n_x, m_y = n_y, m_x
+    eta_y, omega_y = eta_x, omega_x
+
+    params_toggle = [delta_L, gamma_L_X, gamma_L_Y, n_x, n_y, theta_L_X, theta_L_Y, eta_x, eta_y, omega_x, omega_y, m_x,
+                     m_y, delta_x, delta_y, rho_x, rho_y, r_X, r_Y]
+
+    # degradation rates for induction of switches are specific for each toggle switch
+    params_toggle_S0 = params_toggle.copy()
+    params_toggle_S0[-4:-2] = rho_S0_a, rho_S0_b
+    params_toggle_S1 = params_toggle.copy()
+    params_toggle_S1[-4:-2] = rho_S1_a, rho_S1_b
+
+    #########
+    # states
+
+    # latch S0
+    S0_L_A, S0_L_B, S0_a, S0_b, S0_N_a, S0_N_b = state[:6]
+    state_toggle_SO = S0_L_A, S0_L_B, S0_a, S0_b, S0_N_a, S0_N_b
+
+    # latch S1
+    S1_L_A, S1_L_B, S1_a, S1_b, S1_N_a, S1_N_b = state[6:12]
+    state_toggle_S1 = S1_L_A, S1_L_B, S1_a, S1_b, S1_N_a, S1_N_b
+
+    #########
+    # models
+    p_toggle_SO = toggle_model_stochastic(state_toggle_SO, params_toggle_S0, Omega)
+    p_toggle_S1 = toggle_model_stochastic(state_toggle_S1, params_toggle_S1, Omega)
+
+    """
+    mux
+    """
+    #########
+    # params
+    params_mux = delta_L, gamma_L_X, n_y, theta_L_X, eta_x, omega_x, m_x, delta_x, rho_x, gamma_x, theta_x, r_X
+
+    #########
+    # state
+    S0, S1 = S0_a, S1_a
+    I0, I1, I2, I3 = state[12:16]
+    state_mux = np.append([I0, I1, I2, I3, S0, S1], state[16:], axis=0)
+
+    ########
+    # model
+    p_mux = MUX_4_1_model_stochastic(state_mux, params_mux, Omega)
+
+    """
+    return
+    """
+
+    return p_toggle_SO + p_toggle_S1 + p_mux
+
 
 """
 wrappers for scipy.integrate.ode
