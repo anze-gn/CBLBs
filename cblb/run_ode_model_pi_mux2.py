@@ -33,7 +33,7 @@ Y0[4:6] = N_S0
 
 # number of cells: mux
 #Y0[22-4+24:38-4+24] = 1 # number of cells ???
-Y0[15:20] = 1 # number of cells
+Y0[15:21] = 1 # number of cells
 
 
 """
