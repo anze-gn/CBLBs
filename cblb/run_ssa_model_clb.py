@@ -94,7 +94,7 @@ Y0[42:58] = 1 # number of cells
 
 
 # reaction space volume for a single cell
-Omega = 10
+Omega = 3
 
 t_end = 500
 
