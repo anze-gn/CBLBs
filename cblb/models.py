@@ -426,8 +426,8 @@ def MUX_2_1_model(state, T, params):
     L_I0_I0, L_I1_S0, L_I1_I1, L_I0, L_I1 = state[5:10]
 
     # N_I0_S0, N_I0_S1, N_I0_I0, N_I1_S0, N_I1_S1, N_I1_I1, N_I2_S0, N_I2_S1, N_I2_I2, N_I3_S0, N_I3_S1, N_I3_I3, N_I0, N_I1, N_I2, N_I3 = state[22:38]
-    N_I0_S0, N_I0_I0, N_I1_S0, N_I1_S1, N_I1_I1, N_I0, N_I1 = state[10:17]
-    out = state[18]
+    N_I0_S0, N_I0_I0, N_I1_S0, N_I1_I1, N_I0, N_I1 = state[10:16]
+    out = state[16]
 
     """
      I0
@@ -1331,7 +1331,7 @@ def PI_mux2_model(state, T, params):  # programmable interconnections model
     # models
     dstate_toggle_SO = toggle_model(state_toggle_SO, T, params_toggle_S0)
 
-    dstate_toggles = np.append(dstate_toggle_SO, axis=0)
+    dstate_toggles = dstate_toggle_SO
 
     """
     mux
@@ -1349,7 +1349,7 @@ def PI_mux2_model(state, T, params):  # programmable interconnections model
     ########
     # model
     dstate_mux = MUX_2_1_model(state_mux, T, params_mux)
-    dstate_mux = np.delete(dstate_mux, [4,5]) # ignore dS0, dS1
+    dstate_mux = np.delete(dstate_mux, [2]) # ignore dS0
 
     """
     return
