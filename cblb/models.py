@@ -29,7 +29,7 @@ def not_cell_stochastic(state, params, Omega):
     # presume that the molecules are degraded in the same strain as they are produced
     N_Y = N_X
 
-    Omega *= N_X # reaction space volume is proportional to the number of cells
+    #Omega *= N_X # reaction space volume is proportional to the number of cells
 
     gamma_L_X *= Omega
     eta_x *= Omega
@@ -39,17 +39,17 @@ def not_cell_stochastic(state, params, Omega):
 
     p = [0]*5
     
-    #p[0] = N_X * gamma_L_X * (y ** n_y)/(1 + (theta_L_X*y)**n_y ) / Omega
-    p[0] = gamma_L_X * (y ** n_y)/(1 + (theta_L_X*y)**n_y ) / Omega # N_x already included in reaction space volume (Omega)
+    p[0] = N_X * gamma_L_X * (y ** n_y)/(1 + (theta_L_X*y)**n_y ) / Omega
+    #p[0] = gamma_L_X * (y ** n_y)/(1 + (theta_L_X*y)**n_y ) / Omega # N_x already included in reaction space volume (Omega)
     
-    #p[1] = N_X * delta_L * L_X 
-    p[1] = delta_L * L_X # N_x already included in reaction space volume (Omega)
+    p[1] = N_X * delta_L * L_X 
+    #p[1] = delta_L * L_X # N_x already included in reaction space volume (Omega)
 
-    #p[2] = N_X * (eta_x * (1/(1+ (omega_x*L_X)**m_x)))
-    p[2] = (eta_x * (1/(1+ (omega_x*L_X)**m_x))) # N_x already included in reaction space volume (Omega)
+    p[2] = N_X * (eta_x * (1/(1+ (omega_x*L_X)**m_x)))
+    #p[2] = (eta_x * (1/(1+ (omega_x*L_X)**m_x))) # N_x already included in reaction space volume (Omega)
 
-    #p[3] = N_Y * (delta_x * x)
-    p[3] = (delta_x * x) # N_y already included in reaction space volume (Omega)
+    p[3] = N_Y * (delta_x * x)
+    #p[3] = (delta_x * x) # N_y already included in reaction space volume (Omega)
     
     p[4] = rho_x * x
 
@@ -75,7 +75,7 @@ def yes_cell_stochastic(state, params, Omega):
     # presume that the molecules are degraded in the same strain as they are produced
     N_Y = N_X
 
-    Omega *= N_X # reaction space volume is proportional to the number of cells
+    #Omega *= N_X # reaction space volume is proportional to the number of cells
 
     gamma_x *= Omega
     theta_x /= Omega
@@ -83,11 +83,11 @@ def yes_cell_stochastic(state, params, Omega):
 
     p = [0]*3
 
-    #p[0] = N_X * gamma_x * (y ** n_y)/(1 + (theta_x*y)**n_y )
-    p[0] = gamma_x * (y ** n_y)/(1 + (theta_x*y)**n_y ) # N_x already included in reaction space volume (Omega)
+    p[0] = N_X * gamma_x * (y ** n_y)/(1 + (theta_x*y)**n_y )
+    #p[0] = gamma_x * (y ** n_y)/(1 + (theta_x*y)**n_y ) # N_x already included in reaction space volume (Omega)
     
-    #p[1] = N_Y * (delta_x * x) 
-    p[1] = delta_x * x # N_y already included in reaction space volume (Omega)
+    p[1] = N_Y * (delta_x * x) 
+    #p[1] = delta_x * x # N_y already included in reaction space volume (Omega)
 
     p[2] = rho_x * x
     
