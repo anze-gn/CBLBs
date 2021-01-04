@@ -106,8 +106,8 @@ for iteration, state in enumerate(states):
 
     if iteration:
         Y0 = Y_full[-1,:]
-    else:
-        Y0 *= Omega
+    #else:
+    #    Y0 *= Omega
 
     Y0[12:16] = np.array(I) * Omega
 
